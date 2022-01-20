@@ -13,5 +13,5 @@ The user will select images based on a class posed by the test. Based on his sel
 
 Below is the user interface.
 
-![name-of-you-image](https://your-copied-image-address)
+![name-of-you-image](https://github.com/deepika2502/malis/blob/master/ui.png)
 
