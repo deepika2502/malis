@@ -10,4 +10,4 @@ Code repository for MALIS project, 2021-2022.
 2. Main.py contains the code to simulate the CAPTCHA and data labelling process.
 
 
-[Captcha-test.ipynb](www.google.com)
+[Captcha-test.ipynb](https://github.com/deepika2502/malis/blob/master/captcha_test.ipynb)
