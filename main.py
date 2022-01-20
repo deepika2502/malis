@@ -23,5 +23,26 @@ with col1:
 with col4:
     st.button('Check')
 
+user_input='airplane' #user selection
 
+pred_path='C:/Users/Z004CCDD/Downloads/selectedclasses/pred' #images are stored
+
+images_path=glob.glob(pred_path+'/*.jpg')
+
+pred_dict={} #dictionary
+
+def value(i,transformer,user_input):  
+    if(prediction(i,transformer)==user_input):
+        return user_input
+    else:
+        return 'user_input'
+
+for i in images_path: #looping through the images and comparing it with the pred and user selection
+    pred_dict[i[i.rfind('/')+1:]]=value(i,transformer,user_input)
+
+print(pred_dict)
+
+
+        
+        
 
