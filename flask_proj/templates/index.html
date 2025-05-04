@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>CAPTCHA</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: #f5f6fa;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 420px;
+            margin: 40px auto;
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+            padding: 32px 24px 24px 24px;
+        }
+        h2 {
+            text-align: center;
+            color: #222;
+            margin-bottom: 12px;
+        }
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 28px;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 14px;
+            margin-bottom: 24px;
+        }
+        .img-tile {
+            position: relative;
+            aspect-ratio: 1 / 1;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: box-shadow 0.2s, border 0.2s;
+            background: #f0f0f0;
+        }
+        .img-tile.selected {
+            border: 2px solid #1e90ff;
+            box-shadow: 0 0 0 4px #e8f0fe;
+        }
+        .img-tile:hover {
+            box-shadow: 0 4px 16px rgba(30,144,255,0.08);
+        }
+        .img-tile img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+        .buttons {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+        }
+        .buttons button {
+            flex: 1 1 0;
+            padding: 10px 0;
+            font-size: 1rem;
+            border: none;
+            border-radius: 6px;
+            background: #eb0e1d;
+            color: #fff;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .buttons button:nth-child(2) {
+            background: #3498db;
+        }
+        .buttons button:last-child {
+            background: #2ecc71;
+        }
+        .buttons button:hover {
+            opacity: 0.92;
+            transform: scale(1.25);
+        }
+        .error   { color: red; }
+        .success { color: green; }
+        .error, .success {
+            margin-top: 18px;
+            text-align: center;
+            font-size: x-large;
+        }
+        @media (max-width: 600px) {
+            .container {
+                padding: 12px;
+            }
+            .grid {
+                gap: 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2 style="text-transform: capitalize;">Let's see if you're a hoooman.</h2>
+        <div class="subtitle">Solve the CAPTCHA <br>
+        Select all images with a <strong>{{target}}</strong>;  <br>Skip if none.    
+        </div>
+        
+        <form method="POST">
+            <div class="grid">
+                {% for img in images %}
+                <label class="img-tile{% if img in selected %} selected{% endif %}">
+                    <input type="checkbox" name="selected" value="{{ img }}" autocomplete="off" style="display:none"
+                        {% if img in selected %}checked{% endif %}>
+                    <img src="{{ url_for('static', filename=img) }}" alt="captcha image">
+                </label>
+                {% endfor %}
+            </div>
+            {% for img in images %}
+                <input type="hidden" name="images" value="{{ img }}">
+            {% endfor %}
+            <div class="buttons">
+                <button type="submit" name="none">None</button>
+                <button type="submit" name="check">Check</button>
+            </div>
+        </form>
+        {% if message %}
+        <div class="{{ 'error' if 'again' in message else 'success' }}">{{ message }}</div>
+        {% endif %}
+    </div>
+    <script>
+        // Make clicking the image tile select/deselect the checkbox for better UX
+        document.querySelectorAll('.img-tile').forEach(tile => {
+            tile.addEventListener('click', function(e) {
+                const input = this.querySelector('input[type="checkbox"]');
+                input.checked = !input.checked;
+                this.classList.toggle('selected', input.checked);
+                e.preventDefault();
+            });
+        });
+    </script>
+</body>
+</html>
